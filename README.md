@@ -58,3 +58,52 @@ Solar System Simulator/
 ├── README.md              # Renamed and updated documentation
 ├── Solar System Simulator.sln
 └── Solar System Simulator.vcxproj
+
+
+Core Classes
+SolarSystem:
+
+Responsibility: Manages the overall simulation, including the collection of celestial bodies.
+Methods: update(), render(), addBody(CelestialBody*), etc.
+CelestialBody (abstract/base class):
+
+Responsibility: Represents a general celestial body with properties all bodies share.
+Fields: name, mass, position, velocity, etc.
+Methods: update(), render(), etc. Abstract methods for updating state and rendering.
+Planet, Star, Moon, etc. (derived from CelestialBody):
+
+Responsibility: Specific implementations for various types of celestial bodies.
+Specifics: Each class can have additional properties and behaviors. For instance, a Planet might have orbitRadius and orbitPeriod, while a Star could have luminosity.
+Orbit:
+
+Responsibility: Manages the calculation and rendering of orbital paths for celestial bodies.
+Fields: radius, focusPoint, etc.
+Methods: calculatePosition(time), renderPath(), etc.
+Camera:
+
+Responsibility: Manages the view into the solar system, including position, zoom, and orientation.
+Methods: move(), zoom(), rotate(), etc.
+Renderer (potentially abstract):
+
+Responsibility: Handles low-level rendering operations, abstracting away specific OpenGL calls.
+Methods: drawObject(), setShader(), clear(), etc.
+ShaderProgram:
+
+Responsibility: Manages OpenGL shader programs, including loading, compiling, and linking shaders.
+Methods: use(), load(), setUniform(), etc.
+InputHandler:
+
+Responsibility: Manages user input, translating keyboard and mouse actions into simulator commands.
+Methods: processInput(window), etc.
+UI/HUD:
+
+Responsibility: Manages on-screen display elements like information panels, buttons, or sliders.
+Methods: render(), update(), etc.
+PhysicsEngine (optional):
+
+Responsibility: Manages physical simulations, such as gravitational interactions between celestial bodies.
+Methods: updateForces(), simulateMotion(), etc.
+ResourceManager:
+
+Responsibility: Manages resources like textures, models, and shaders, ensuring they're loaded and accessible.
+Methods: loadTexture(), getModel(), getShader(), etc

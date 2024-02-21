@@ -132,10 +132,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="Documenation.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include=".gitignore" />
+    <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Solar System Simulator.cpp" />
