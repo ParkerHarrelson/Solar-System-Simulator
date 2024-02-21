@@ -15,11 +15,14 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Solar System Simulator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+    <Text Include="Documenation.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Documenation.txt" />
+    <None Include=".gitignore" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Solar System Simulator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

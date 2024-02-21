@@ -1,4 +1,4 @@
-
+﻿
 Given that you're starting with a vanilla C++ file in Visual Studio and planning to use OpenGL for your Solar System Simulator, here's a more detailed and specific outline of the first 10 tasks you can focus on. These tasks are designed to progressively build up your project from setting up OpenGL to rendering basic 2D graphics, which you can then expand into more complex 3D visualizations.
 
 1. Set Up OpenGL in Visual Studio
@@ -41,3 +41,20 @@ Create an OpenGL Context: Use GLFW to create an OpenGL context associated with t
 Initialize GLEW: With an OpenGL context created, initialize GLEW. GLEW makes it easy to access OpenGL functions, including those beyond your system's base OpenGL version.
 Start Rendering: You can now start using OpenGL functions to render graphics in your window. Begin with simple tasks like clearing the screen with a color.
 Handle Input: Use GLFW to handle user input, allowing you to interact with your simulation (e.g., closing the window, moving the camera).
+
+
+Solar System Simulator/
+│
+├── external/              # Place for GLFW, GLEW if you have them locally
+├── include/               # Header files, if you have any
+├── src/                   # Source files
+│   └── Solar System Simulator.cpp
+├── resources/             # Textures, shaders, etc.
+├── x64/
+│   ├── Debug/             # Debug build outputs and DLLs
+│   └── Release/           # Release build outputs, when you have it
+│
+├── .gitignore
+├── README.md              # Renamed and updated documentation
+├── Solar System Simulator.sln
+└── Solar System Simulator.vcxproj
