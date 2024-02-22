@@ -54,5 +54,8 @@
     <ClInclude Include="include\utils\Utilities_Constants.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\utils\PairDefinitions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
