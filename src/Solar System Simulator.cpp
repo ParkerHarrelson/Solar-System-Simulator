@@ -1,11 +1,7 @@
-// Solar System Simulator.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
-
-const float PI = 3.1415927;
 
 static void error_callback(int error, const char* description) {
     std::cerr << "Error: " << description << std::endl;

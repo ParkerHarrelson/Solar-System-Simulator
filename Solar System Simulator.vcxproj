@@ -71,7 +71,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\Development\Libraries\glfw-3.3.9.bin.WIN64\include;C:\Development\Libraries\glew-2.1.0\include</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\Development\Libraries\glfw-3.3.9.bin.WIN64\include;C:\Development\Libraries\glew-2.1.0\include;$(ProjectDir)include;$(ProjectDir)include\celestial;$(ProjectDir)include\util;$(ProjectDir)include\renderer</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);C:\Development\Libraries\glfw-3.3.9.bin.WIN64\lib-vc2019;C:\Development\Libraries\glew-2.1.0\lib\Release\x64</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -136,7 +136,14 @@
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\celestial\Star.cpp" />
     <ClCompile Include="src\Solar System Simulator.cpp" />
+    <ClCompile Include="src\utils\MathUtils.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\celestial\CelestialBody.h" />
+    <ClInclude Include="include\celestial\Star.h" />
+    <ClInclude Include="include\utils\MathUtils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
