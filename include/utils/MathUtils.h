@@ -2,6 +2,9 @@
 #ifndef MATHUTILS_H
 #define MATHUTILS_H
 
+#include <utils/Utilities_Constants.h>
+#include <celestial/CelestialBody.h>
+
 namespace Utilities {
 
 	class MathUtils {
@@ -15,6 +18,16 @@ namespace Utilities {
 		static constexpr double convertTemperatureToCelsiusFromKelvin(double temperatureInKelvin) {
 			return temperatureInKelvin - 273.15;
 		}
+
+		static constexpr double convertRotationalPeriodToAngularVelocity(double rotationalPeriod) {
+			return (2 * PI) / rotationalPeriod;
+		}
+
+		static constexpr double convertAngularVelocityToRotationalPeriod(double angularVelocity) {
+			return (2 * PI) / angularVelocity;
+		}
+
+		double calculateGravitationalForceBetweenMasses(const SolarSystem::CelestialBody& bodyOne, const SolarSystem::CelestialBody& bodyTwo);
 
 	};
 }

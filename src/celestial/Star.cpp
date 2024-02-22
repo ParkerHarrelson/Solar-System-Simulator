@@ -6,4 +6,5 @@ using namespace SolarSystem;
 
 void Star::updatePosition() {
 
+
 }

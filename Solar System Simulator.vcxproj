@@ -136,14 +136,19 @@
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\celestial\SolarSystemModel.cpp" />
     <ClCompile Include="src\celestial\Star.cpp" />
     <ClCompile Include="src\Solar System Simulator.cpp" />
     <ClCompile Include="src\utils\MathUtils.cpp" />
+    <ClCompile Include="src\utils\Position.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\celestial\CelestialBody.h" />
+    <ClInclude Include="include\celestial\SolarSystemModel.h" />
     <ClInclude Include="include\celestial\Star.h" />
     <ClInclude Include="include\utils\MathUtils.h" />
+    <ClInclude Include="include\utils\Position.h" />
+    <ClInclude Include="include\utils\Utilities_Constants.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

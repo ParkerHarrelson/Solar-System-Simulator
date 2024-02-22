@@ -3,6 +3,7 @@
 #define CELESTIALBODY_H
 
 #include <string>
+#include<utils/Position.h>
 
 namespace SolarSystem {
 
@@ -13,7 +14,8 @@ namespace SolarSystem {
 
 	public:
 		
-		CelestialBody(double mass, double velocity, double radius, std::string name) : mass(mass), velocity(velocity), radius(radius), name(std::move(name)) {}
+		CelestialBody(double mass, double velocity, double radius, std::string name, const Utilities::Position& position, double angularVelocity)  
+			: mass(mass), velocity(velocity), radius(radius), name(std::move(name)), currentPosition(position), angularVelocity(angularVelocity) {}
 
 		inline double getMass() const {
 			return this->mass;
@@ -31,8 +33,24 @@ namespace SolarSystem {
 			return this->name;
 		}
 
+		inline const Utilities::Position& getCurrentPosition() const {
+			return this->currentPosition;
+		}
+
+		inline double getAngularVelocity() const {
+			return this->angularVelocity;
+		}
+
 		inline void setVelocity(double velocity) {
 			this->velocity = velocity;
+		}
+
+		inline void setPosition(const Utilities::Position& newPosition) {
+			this->currentPosition = newPosition;
+		}
+
+		inline void setAngularVelocity(double omega) {
+			this->angularVelocity = omega;
 		}
 
 		virtual void updatePosition() = 0;
@@ -41,10 +59,12 @@ namespace SolarSystem {
 
 	private:
 
-		const double mass;				// Mass of the celestial body in Kilograms(kg)
-		const double radius;			// Radius of the celestial body in Kilometers (km)
-		const std::string name;			// Name of the celestial body
-		double velocity;				// Instant time velocity of the celestial body in Kilometers / Second (km/s)
+		const double mass;						// Mass of the celestial body in Kilograms(kg)
+		const double radius;					// Radius of the celestial body in Kilometers (km)
+		const std::string name;					// Name of the celestial body
+		Utilities::Position currentPosition;	// The current position of the celestial body in cartesian space at the center of the body
+		double velocity;						// Instant time velocity of the celestial body in Kilometers / Second (km/s)
+		double angularVelocity;					// The angular velocity of the celestial body
 
 	};
 }

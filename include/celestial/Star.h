@@ -3,6 +3,7 @@
 #define STAR_H
 
 #include<CelestialBody.h>
+#include<utils/Position.h>
 
 namespace SolarSystem {
 
@@ -13,8 +14,8 @@ namespace SolarSystem {
 
 	public: 
 
-		Star(double mass, double velocity, double radius, std::string name, double luminosity, double temperature)
-			: CelestialBody(mass, velocity, radius, name), luminosity(luminosity), temperature(temperature) {}
+		Star(double mass, double velocity, double radius, std::string name, Utilities::Position& position, double angularVelocity, double luminosity, double temperature)
+			: CelestialBody(mass, velocity, radius, name, position, angularVelocity), luminosity(luminosity), temperature(temperature) {}
 
 		virtual void updatePosition() override;
 
