@@ -1,5 +1,5 @@
-#ifndef UTILITIES_CONSTANTS_H
-#define UTILITIES_CONSTANTS_H
+#ifndef UTILITIESNAMESPACE_H
+#define UTILITIESNAMESPACE_H
 
 namespace Utilities {
 
@@ -10,6 +10,13 @@ namespace Utilities {
     // Conversion factors
     constexpr double KILOMETERS_PER_ASTRONOMICAL_UNIT = 1.496e+8; // Distance from Earth to the Sun in kilometers
     constexpr double SECONDS_PER_DAY = 86400;
+
+    // generic utils functions
+    template<typename T>
+    const T& clamp(const T& v, const T& lo, const T& hi) {
+        assert(!(hi < lo));
+        return (v < lo) ? lo : (hi < v) ? hi : v;
+    }
 }
 
 #endif 

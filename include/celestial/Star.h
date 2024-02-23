@@ -14,7 +14,7 @@ namespace SolarSystem {
 
 	public: 
 
-		Star(double mass, double velocity, double radius, std::string name, Utilities::Position& position, double angularVelocity, double luminosity, double temperature)
+		Star(double mass, const Utilities::Vector& velocity, double radius, std::string name, const Utilities::Vector& position, double angularVelocity, double luminosity, double temperature)
 			: CelestialBody(mass, velocity, radius, name, position, angularVelocity), luminosity(luminosity), temperature(temperature) {}
 
 		virtual void updatePosition() override;

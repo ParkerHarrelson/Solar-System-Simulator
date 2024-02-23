@@ -6,10 +6,16 @@
 #include <memory>
 #include <string>
 #include <algorithm>
+#include <optional>
 #include <unordered_map>
 #include <utility>
+#include <future>
+#include <atomic>
+#include <iostream>
+#include <utils/Vector.h>
 #include <celestial/CelestialBody.h>
 #include <utils/PairDefinitions.h>
+#include <utils/MathUtils.h>
 
 namespace SolarSystem {
 
@@ -27,14 +33,30 @@ namespace SolarSystem {
 			return this->celestialBodies;
 		}
 
-		std::pair<int, double> getForceBetweenBodies(const CelestialBody* body1, const CelestialBody* body2) const;
+		std::pair<int, Utilities::Vector> getForceBetweenBodies(const CelestialBody* body1, const CelestialBody* body2) const;
 
 		void removeCelestialBody(const std::string& name);
 
+		int determineNewScore(const Utilities::Vector& force, float timestep);
+
+		int adjustScoreBasedOnTimestep(int currentScore, float timestep, float fps);
+		
+		void processForceCalculationForPair(const std::pair<const CelestialBody*, const CelestialBody*>& pair, int& score,Utilities::Vector& force, float timestep, float fps);
+	
+		void calculateForceVectorsBasedOnTimestep(float timestep, float fps);
+
+		void calculateForceVectorsBasedOnTimestepParrallelized(float timestep, float fps);
+
+		void calculateTotalForces();
+
+		void updateCelestialBodyPositionsAndVelocities(float timestep);
+
 	private:
 
-		std::vector<std::unique_ptr<CelestialBody>> celestialBodies;		// The storage of all of the celestial bodies that will be included in the simulation
-		std::unordered_map<std::pair<const CelestialBody*, const CelestialBody*>, std::pair<int, double>, Utilities::PairHash, Utilities::PairEqual> forceCalculationMap;
+		std::vector<std::unique_ptr<CelestialBody>> celestialBodies;		
+		std::unordered_map<std::pair<const CelestialBody*, const CelestialBody*>, std::pair<int, Utilities::Vector>, Utilities::PairHash, Utilities::PairEqual> forceCalculationMap;
+		std::unordered_map<const CelestialBody*, Utilities::Vector> netForces;
+
 	};
 }
 

@@ -2,7 +2,7 @@
 #ifndef MATHUTILS_H
 #define MATHUTILS_H
 
-#include <utils/Utilities_Constants.h>
+#include <utils/UtilitiesNamespace.h>
 #include <celestial/CelestialBody.h>
 
 namespace Utilities {
@@ -27,7 +27,7 @@ namespace Utilities {
 			return (2 * PI) / angularVelocity;
 		}
 
-		double calculateGravitationalForceBetweenMasses(const SolarSystem::CelestialBody& bodyOne, const SolarSystem::CelestialBody& bodyTwo);
+		static Vector calculateGravitationalForceBetweenMasses(const SolarSystem::CelestialBody& bodyOne, const SolarSystem::CelestialBody& bodyTwo);
 
 	};
 }

@@ -140,7 +140,7 @@
     <ClCompile Include="src\celestial\Star.cpp" />
     <ClCompile Include="src\Solar System Simulator.cpp" />
     <ClCompile Include="src\utils\MathUtils.cpp" />
-    <ClCompile Include="src\utils\Position.cpp" />
+    <ClCompile Include="src\utils\Vector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\celestial\CelestialBody.h" />
@@ -148,8 +148,8 @@
     <ClInclude Include="include\celestial\Star.h" />
     <ClInclude Include="include\utils\MathUtils.h" />
     <ClInclude Include="include\utils\PairDefinitions.h" />
-    <ClInclude Include="include\utils\Position.h" />
-    <ClInclude Include="include\utils\Utilities_Constants.h" />
+    <ClInclude Include="include\utils\UtilitiesNamespace.h" />
+    <ClInclude Include="include\utils\Vector.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

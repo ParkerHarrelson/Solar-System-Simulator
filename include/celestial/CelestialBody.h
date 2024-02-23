@@ -3,7 +3,7 @@
 #define CELESTIALBODY_H
 
 #include <string>
-#include<utils/Position.h>
+#include<utils/Vector.h>
 
 namespace SolarSystem {
 
@@ -14,7 +14,7 @@ namespace SolarSystem {
 
 	public:
 		
-		CelestialBody(double mass, double velocity, double radius, std::string name, const Utilities::Position& position, double angularVelocity)  
+		CelestialBody(double mass, const Utilities::Vector& velocity, double radius, std::string name, const Utilities::Vector& position, double angularVelocity)  
 			: mass(mass), velocity(velocity), radius(radius), name(std::move(name)), currentPosition(position), angularVelocity(angularVelocity) {}
 
 		inline double getMass() const {
@@ -25,7 +25,7 @@ namespace SolarSystem {
 			return this->radius;
 		}
 
-		inline double getVelocity() const {
+		inline Utilities::Vector getVelocity() const {
 			return this->velocity;
 		}
 
@@ -33,7 +33,7 @@ namespace SolarSystem {
 			return this->name;
 		}
 
-		inline const Utilities::Position& getCurrentPosition() const {
+		inline const Utilities::Vector& getCurrentPosition() const {
 			return this->currentPosition;
 		}
 
@@ -41,11 +41,11 @@ namespace SolarSystem {
 			return this->angularVelocity;
 		}
 
-		inline void setVelocity(double velocity) {
+		inline void setVelocity(const Utilities::Vector& velocity) {
 			this->velocity = velocity;
 		}
 
-		inline void setPosition(const Utilities::Position& newPosition) {
+		inline void setPosition(const Utilities::Vector& newPosition) {
 			this->currentPosition = newPosition;
 		}
 
@@ -62,8 +62,8 @@ namespace SolarSystem {
 		const double mass;						// Mass of the celestial body in Kilograms(kg)
 		const double radius;					// Radius of the celestial body in Kilometers (km)
 		const std::string name;					// Name of the celestial body
-		Utilities::Position currentPosition;	// The current position of the celestial body in cartesian space at the center of the body
-		double velocity;						// Instant time velocity of the celestial body in Kilometers / Second (km/s)
+		Utilities::Vector currentPosition;		// The current position of the celestial body as a vector
+		Utilities::Vector velocity;				// Vector velocity of the body
 		double angularVelocity;					// The angular velocity of the celestial body
 
 	};

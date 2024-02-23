@@ -3,14 +3,26 @@
 
 using namespace Utilities;
 
-double MathUtils::calculateGravitationalForceBetweenMasses(const SolarSystem::CelestialBody& bodyOne, const SolarSystem::CelestialBody& bodyTwo) {
-    const Utilities::Position& bodyOnePosition = bodyOne.getCurrentPosition();
-    const Utilities::Position& bodyTwoPosition = bodyTwo.getCurrentPosition();
 
-    double euclideanDistance = bodyOnePosition.distanceToDifferentPosition(bodyTwoPosition);
+Vector MathUtils::calculateGravitationalForceBetweenMasses(const SolarSystem::CelestialBody& bodyOne, const SolarSystem::CelestialBody& bodyTwo) {
+    const Vector& positionOne = bodyOne.getCurrentPosition();
+    const Vector& positionTwo = bodyTwo.getCurrentPosition();
 
-    return GRAVITATIONAL_CONSTANT * ((bodyOne.getMass() * bodyTwo.getMass()) / (euclideanDistance * euclideanDistance));
+    Vector direction = positionTwo - positionOne;
+
+    double distance = direction.magnitude();
+
+    if (distance == 0) {
+        throw std::runtime_error("Attempt to calculate gravitational force between overlapping celestial bodies.");
+    }
+
+    double forceMagnitude = GRAVITATIONAL_CONSTANT * (bodyOne.getMass() * bodyTwo.getMass()) / (distance * distance);
+
+    Vector forceVector = direction.normalize() * forceMagnitude;
+
+    return forceVector;
 }
+
 
 // 5,890,329,911 == 100 // Mercury and Pluto
 // 37,236,121,041,383 == 90 // earth and titan
