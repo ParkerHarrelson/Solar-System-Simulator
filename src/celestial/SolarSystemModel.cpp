@@ -1,4 +1,5 @@
 #include "SolarSystemModel.h"
+#include <utils/ShaderUtils.h>
 
 using namespace SolarSystem;
 
@@ -146,4 +147,40 @@ void SolarSystemModel::updateCelestialBodyPositionsAndVelocities(float timestep)
         body->setVelocity(newVelocity);
     }
 }
+
+void SolarSystemModel::initializeRendering(Utilities::GeometryManager& geomManager) {
+    // Compile shaders and create shader program
+    shaderProgram = ShaderUtils::createShaderProgram(ShaderUtils::vertexShaderSource, ShaderUtils::fragmentShaderSource);
+
+    // Initialize graphics for each celestial body
+    for (auto& body : celestialBodies) {
+        body->initializeGraphics(geomManager);
+    }
+}
+
+void SolarSystemModel::render() {
+    // Use shader program
+    glUseProgram(shaderProgram);
+
+    // Setup view and projection matrices (Assuming you have camera or view settings)
+    glm::mat4 view = glm::lookAt(
+        glm::vec3(0.0f, 0.0f, 100.0f), // Camera is at (0,0,10), in World Space
+        glm::vec3(0.0f, 0.0f, 0.0f), // and looks at the origin
+        glm::vec3(0.0f, 1.0f, 0.0f)  // Head is up (set to 0,-1,0 to look upside-down)
+    ); // Dummy view matrix for now
+    glm::mat4 projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+
+    // Set view and projection matrices in the shader
+    unsigned int viewLoc = glGetUniformLocation(shaderProgram, "view");
+    unsigned int projLoc = glGetUniformLocation(shaderProgram, "projection");
+    glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+    glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+
+    // Draw each celestial body
+    for (auto& body : celestialBodies) {
+        body->draw(shaderProgram);
+    }
+}
+
+
 

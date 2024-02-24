@@ -1,7 +1,16 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
 #include <iostream>
+#include <memory>
+#include <celestial/CelestialBody.h>
+#include <celestial/SolarSystemModel.h>
+#include <celestial/Star.h>
+#include <celestial/Planet.h>
+#include <utils/Vector.h>
+#include <utils/ShaderUtils.h>
+#include <utils/GeometryManager.h>
 
 static void error_callback(int error, const char* description) {
     std::cerr << "Error: " << description << std::endl;
@@ -56,8 +65,32 @@ int main(void) {
             return -1;
         }
 
+        Utilities::GeometryManager geomManager;
+        geomManager.initialize();
+
+        GLuint shaderProgram = ShaderUtils::createShaderProgram(ShaderUtils::vertexShaderSource, ShaderUtils::fragmentShaderSource);
+        SolarSystem::SolarSystemModel solarSystem;
+        solarSystem.setShaderProgram(shaderProgram);
+
+        // Create a star (e.g., the Sun) and a planet (e.g., Earth)
+        auto sun = std::make_unique<SolarSystem::Star>(1.989e30, Utilities::Vector(0, 0, 0), 696340, "Sun", Utilities::Vector(0, 0, 0), 0, 3.828e26, 5778);
+        auto earth = std::make_unique<SolarSystem::Planet>(5.972e24, Utilities::Vector(0, 29.78, 0), 6371, "Earth", Utilities::Vector(1, 0, 0), 0);
+
+        // Add the celestial bodies to the solar system model
+        solarSystem.addCelestialBody(std::move(sun));
+        solarSystem.addCelestialBody(std::move(earth));
+
+        for (auto& body : solarSystem.getCelestialBodies()) {
+            body->initializeGraphics(geomManager);
+        }
+
         while (!glfwWindowShouldClose(window)) {
-            glClear(GL_COLOR_BUFFER_BIT);
+            glClearColor(0.1f, 0.1f, 0.3f, 1.0f); // Dark blue background
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            // Render your solar system
+            solarSystem.render();
+
             glfwSwapBuffers(window);
             glfwPollEvents();
         }

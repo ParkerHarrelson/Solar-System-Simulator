@@ -16,6 +16,11 @@
 #include <celestial/CelestialBody.h>
 #include <utils/PairDefinitions.h>
 #include <utils/MathUtils.h>
+#include <GL/glew.h>
+#include <glm/glm.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 namespace SolarSystem {
 
@@ -51,11 +56,22 @@ namespace SolarSystem {
 
 		void updateCelestialBodyPositionsAndVelocities(float timestep);
 
+		// Method to initialize the rendering context
+		void initializeRendering(Utilities::GeometryManager& geomManager);
+
+		// Method to render the scene
+		void render();
+
+		inline void setShaderProgram(GLuint shaderProgram) {
+			this->shaderProgram = shaderProgram;
+		}
+
 	private:
 
 		std::vector<std::unique_ptr<CelestialBody>> celestialBodies;		
 		std::unordered_map<std::pair<const CelestialBody*, const CelestialBody*>, std::pair<int, Utilities::Vector>, Utilities::PairHash, Utilities::PairEqual> forceCalculationMap;
 		std::unordered_map<const CelestialBody*, Utilities::Vector> netForces;
+		GLuint shaderProgram;
 
 	};
 }

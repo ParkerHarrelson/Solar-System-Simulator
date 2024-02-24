@@ -3,6 +3,13 @@
 #define CELESTIALBODY_H
 
 #include <string>
+#include <vector>
+#include <GL/glew.h>
+#include <glm/glm.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <utils/GeometryManager.h>
 #include<utils/Vector.h>
 
 namespace SolarSystem {
@@ -13,9 +20,13 @@ namespace SolarSystem {
 		// This class serves as a base for more specific types of celestial bodies, such as planets, stars, and moons.
 
 	public:
-		
-		CelestialBody(double mass, const Utilities::Vector& velocity, double radius, std::string name, const Utilities::Vector& position, double angularVelocity)  
-			: mass(mass), velocity(velocity), radius(radius), name(std::move(name)), currentPosition(position), angularVelocity(angularVelocity) {}
+
+		CelestialBody(double mass, const Utilities::Vector& velocity, double radius, std::string name, const Utilities::Vector& position, double angularVelocity, unsigned int longitudeSegments = 36, unsigned int latitudeSegments = 18)
+			: mass(mass), velocity(velocity), radius(radius), name(std::move(name)),
+				currentPosition(position), angularVelocity(angularVelocity),
+				longitudeSegments(longitudeSegments), latitudeSegments(latitudeSegments),
+				geometryID(0), numIndices(0) 
+		{}
 
 		inline double getMass() const {
 			return this->mass;
@@ -53,7 +64,9 @@ namespace SolarSystem {
 			this->angularVelocity = omega;
 		}
 
-		virtual void updatePosition() = 0;
+		virtual void initializeGraphics(Utilities::GeometryManager& geomManager);
+
+		virtual void draw(GLuint shaderProgram);
 
 		virtual ~CelestialBody() = default;
 
@@ -65,7 +78,12 @@ namespace SolarSystem {
 		Utilities::Vector currentPosition;		// The current position of the celestial body as a vector
 		Utilities::Vector velocity;				// Vector velocity of the body
 		double angularVelocity;					// The angular velocity of the celestial body
+		unsigned int geometryID;
+		unsigned int numIndices;
+		unsigned int longitudeSegments;
+		unsigned int latitudeSegments;
 
+		void generateSphereData(std::vector<float>& vertices, std::vector<unsigned int>& indices);
 	};
 }
 
