@@ -1,4 +1,3 @@
-
 #include <utils/GeometryManager.h>
 #include <vector>
 #include <utils/UtilitiesNamespace.h>
@@ -68,8 +67,10 @@ namespace Utilities {
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), indices.data(), GL_STATIC_DRAW);
 
         // Setup vertex attributes (e.g., position)
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0); // Position
         glEnableVertexAttribArray(0);
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float))); // Color
+        glEnableVertexAttribArray(1);
 
         // Unbind VAO
         glBindVertexArray(0);

@@ -3,6 +3,15 @@
 
 using namespace SolarSystem;
 
+void SolarSystemModel::addCelestialBody(std::unique_ptr<CelestialBody> celestialBody) {
+    for (const auto& existingBody : celestialBodies) {
+        std::pair<const CelestialBody*, const CelestialBody*> newPair(existingBody.get(), celestialBody.get());
+
+        forceCalculationMap[newPair] = std::make_pair(0, Utilities::Vector(0, 0, 0));
+    }
+    this->celestialBodies.push_back(std::move(celestialBody));
+}
+
 void SolarSystemModel::removeCelestialBody(const std::string& name) {
     auto it = std::find_if(celestialBodies.begin(), celestialBodies.end(),
         [&name](const std::unique_ptr<CelestialBody>& body) {
@@ -158,17 +167,8 @@ void SolarSystemModel::initializeRendering(Utilities::GeometryManager& geomManag
     }
 }
 
-void SolarSystemModel::render() {
-    // Use shader program
+void SolarSystemModel::render(const glm::mat4& view, const glm::mat4& projection) {
     glUseProgram(shaderProgram);
-
-    // Setup view and projection matrices (Assuming you have camera or view settings)
-    glm::mat4 view = glm::lookAt(
-        glm::vec3(0.0f, 0.0f, 100.0f), // Camera is at (0,0,10), in World Space
-        glm::vec3(0.0f, 0.0f, 0.0f), // and looks at the origin
-        glm::vec3(0.0f, 1.0f, 0.0f)  // Head is up (set to 0,-1,0 to look upside-down)
-    ); // Dummy view matrix for now
-    glm::mat4 projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
 
     // Set view and projection matrices in the shader
     unsigned int viewLoc = glGetUniformLocation(shaderProgram, "view");

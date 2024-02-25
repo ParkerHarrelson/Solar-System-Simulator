@@ -152,6 +152,7 @@
     <ClInclude Include="include\celestial\Planet.h" />
     <ClInclude Include="include\celestial\SolarSystemModel.h" />
     <ClInclude Include="include\celestial\Star.h" />
+    <ClInclude Include="include\utils\Camera.h" />
     <ClInclude Include="include\utils\GeometryManager.h" />
     <ClInclude Include="include\utils\MathUtils.h" />
     <ClInclude Include="include\utils\PairDefinitions.h" />

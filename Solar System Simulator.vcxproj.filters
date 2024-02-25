@@ -78,5 +78,8 @@
     <ClInclude Include="include\utils\GeometryManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\utils\Camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

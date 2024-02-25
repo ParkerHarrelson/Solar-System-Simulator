@@ -30,9 +30,7 @@ namespace SolarSystem {
 
 		SolarSystemModel() = default;
 
-		inline void addCelestialBody(std::unique_ptr<CelestialBody> celestialBody) {
-			this->celestialBodies.push_back(std::move(celestialBody));
-		}
+		void addCelestialBody(std::unique_ptr<CelestialBody> celestialBody);
 
 		const std::vector<std::unique_ptr<CelestialBody>>& getCelestialBodies() const {
 			return this->celestialBodies;
@@ -41,12 +39,6 @@ namespace SolarSystem {
 		std::pair<int, Utilities::Vector> getForceBetweenBodies(const CelestialBody* body1, const CelestialBody* body2) const;
 
 		void removeCelestialBody(const std::string& name);
-
-		int determineNewScore(const Utilities::Vector& force, float timestep);
-
-		int adjustScoreBasedOnTimestep(int currentScore, float timestep, float fps);
-		
-		void processForceCalculationForPair(const std::pair<const CelestialBody*, const CelestialBody*>& pair, int& score,Utilities::Vector& force, float timestep, float fps);
 	
 		void calculateForceVectorsBasedOnTimestep(float timestep, float fps);
 
@@ -60,7 +52,7 @@ namespace SolarSystem {
 		void initializeRendering(Utilities::GeometryManager& geomManager);
 
 		// Method to render the scene
-		void render();
+		void render(const glm::mat4& view, const glm::mat4& projection);
 
 		inline void setShaderProgram(GLuint shaderProgram) {
 			this->shaderProgram = shaderProgram;
@@ -72,6 +64,10 @@ namespace SolarSystem {
 		std::unordered_map<std::pair<const CelestialBody*, const CelestialBody*>, std::pair<int, Utilities::Vector>, Utilities::PairHash, Utilities::PairEqual> forceCalculationMap;
 		std::unordered_map<const CelestialBody*, Utilities::Vector> netForces;
 		GLuint shaderProgram;
+
+		int determineNewScore(const Utilities::Vector& force, float timestep);
+		int adjustScoreBasedOnTimestep(int currentScore, float timestep, float fps);
+		void processForceCalculationForPair(const std::pair<const CelestialBody*, const CelestialBody*>& pair, int& score, Utilities::Vector& force, float timestep, float fps);
 
 	};
 }
