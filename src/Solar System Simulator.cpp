@@ -23,7 +23,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
     auto camera = static_cast<Utilities::Camera*>(glfwGetWindowUserPointer(window));
-    camera->Zoom(static_cast<float>(yoffset) * -20.0e11f);
+    camera->Zoom(static_cast<float>(yoffset) * -2.0e2f);
 }
 
 
@@ -79,85 +79,45 @@ int main(void) {
         SolarSystem::SolarSystemModel solarSystem;
         solarSystem.setShaderProgram(shaderProgram);
 
-        // Create a star (e.g., the Sun) and a planet (e.g., Earth)
-        const double G = 6.67430e-11; // Gravitational constant in m^3 kg^-1 s^-2
-        const double massSun = 1.989e30; // Mass of the Sun in kg
-        const double massEarth = 5.972e24; // Mass of the Earth in kg
-        const double distanceEarthSun = 1.496e6; // Average distance from Earth to Sun in meters
-        const double radiusSun = 6.9634e8; // Radius of the Sun in meters
-        const double radiusEarth = 6.371e6; // Radius of the Earth in meters
+        // Define the celestial bodies with small values for a simple simulation
+        const float starRadius = 10.0f; // Star radius in km
+        const float planetRadius = 5.0f; // Planet radius in km
+        const float planetDistance = 600.0f; // Distance of the planet from the star in km
 
-        // Assuming a circular orbit for simplicity:
-        const double velocityMagnitudeEarth = std::sqrt(G * massSun / distanceEarthSun);
-        Utilities::Vector velocityEarth(0, velocityMagnitudeEarth, 0); // Earth's velocity is tangential, so if the Sun is at the origin, then velocity is in the Y-axis.
-
-        // Create Sun and Earth
-        auto sun = std::make_unique<SolarSystem::Star>(
-            massSun, // Mass of the Sun
-            Utilities::Vector(0, 0, 0), // Sun's velocity (stationary in this simple model)
-            radiusSun / 1e3, // Radius of the Sun in kilometers for drawing
-            "Sun", // Name
-            Utilities::Vector(0, 0, 0), // Sun's position at the origin
-            0, // Angular velocity
-            3.828e26, // Luminosity in Watts
-            5778 // Surface temperature in Kelvin
+        // Star at the origin
+        auto star = std::make_unique<SolarSystem::Star>(
+            1000000000000.0f, // Small mass for the star in kg
+            Utilities::Vector(0.0f, 0.0f, 0.0f), // Stationary star
+            starRadius, // Radius in km
+            "Star",
+            Utilities::Vector(0.0f, 0.0f, 0.0f), // Star's position at the origin
+            0.0f, // Angular velocity
+            1.0f, // Luminosity in arbitrary units
+            3000.0f // Surface temperature in Kelvin
         );
 
-        auto earth = std::make_unique<SolarSystem::Planet>(
-            massEarth, // Mass of the Earth
-            velocityEarth, // Earth's initial velocity
-            radiusEarth / 1e3, // Radius of the Earth in kilometers for drawing
-            "Earth", // Name
-            Utilities::Vector(distanceEarthSun, 0, 0), // Earth's initial position along the X-axis
-            0 // Angular velocity
+        auto planet = std::make_unique<SolarSystem::Planet>(
+            500.0f, // Small mass for the planet in kg
+            Utilities::Vector(0.003334f, 0.0f, 0.0f), // Orbital velocity in km/s for a stable orbit
+            planetRadius, // Radius in km
+            "Planet",
+            Utilities::Vector(-600.0f, 0.0f, 0.0f), // Position near the star along the x-axis
+            0.0f // Angular velocity
         );
 
-        // Mars, for example
-        const double massMars = 6.4171e23; // Mass of Mars in kg
-        const double distanceMarsSun = 2.279e8; // Average distance from Mars to Sun in meters
-        const double radiusMars = 3.3895e4; // Radius of Mars in meters
-        const double velocityMagnitudeMars = std::sqrt(G * massSun / distanceMarsSun);
-        Utilities::Vector velocityMars(0, velocityMagnitudeMars, 0);
 
-        auto mars = std::make_unique<SolarSystem::Planet>(
-            massMars,
-            velocityMars,
-            radiusMars / 1e3, // Radius in kilometers for drawing
-            "Mars",
-            Utilities::Vector(distanceMarsSun, 0, 0),
-            0
-        );
+        solarSystem.addCelestialBody(std::move(star));
+        solarSystem.addCelestialBody(std::move(planet));
 
-        // Venus, as another example
-        const double massVenus = 4.8675e24; // Mass of Venus in kg
-        const double distanceVenusSun = 1.082e8; // Average distance from Venus to Sun in meters
-        const double radiusVenus = 6.0518e3; // Radius of Venus in meters
-        const double velocityMagnitudeVenus = std::sqrt(G * massSun / distanceVenusSun);
-        Utilities::Vector velocityVenus(0, velocityMagnitudeVenus, 0);
-
-        auto venus = std::make_unique<SolarSystem::Planet>(
-            massVenus,
-            velocityVenus,
-            radiusVenus / 1e3, // Radius in kilometers for drawing
-            "Venus",
-            Utilities::Vector(distanceVenusSun, 0, 0),
-            0
-        );
-
-        // Add the celestial bodies to the solar system model
-        solarSystem.addCelestialBody(std::move(sun));
-        solarSystem.addCelestialBody(std::move(earth));
-        solarSystem.addCelestialBody(std::move(mars));
-        solarSystem.addCelestialBody(std::move(venus));
 
         for (auto& body : solarSystem.getCelestialBodies()) {
             body->initializeGraphics(geomManager);
         }
 
         Utilities::Camera camera(
-            50000000000000.0f, // Distance from the origin
-            glm::radians(85.0f), // Slightly decrease theta for initial view
-            glm::radians(90.0f), // phi
+            1000.0f, // Position the camera 100 km from the origin, which is far enough to see both bodies
+            glm::radians(90.0f), // Theta, angle from the z-axis in radians, looking from a higher point
+            glm::radians(0.0f), // Phi, angle from the x-axis in the xy-plane in radians, looking directly at the origin
             glm::vec3(0.0f, 0.0f, 0.0f) // focusPoint at the origin
         );
 
@@ -174,14 +134,17 @@ int main(void) {
             glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // Dark blue background
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            // Update the projection matrix with the new aspect ratio
-            glm::mat4 projection = glm::perspective(
-                glm::radians(45.0f), // Field of View Angle
-                aspectRatio, // Aspect Ratio
-                1e7f, // Near clipping plane (10 million km)
-                3e20f // Far clipping plane (300 million km, ensuring that the whole distance is visible)
-            );
+            // Setup the projection matrix
+            float nearPlane = 1.0f; // 1 km from the camera
+            float farPlane = 10000.0f; // 100 km from the camera, enough to see both celestial bodies
+            float fieldOfView = 45.0f; // Field of view in degrees
 
+            glm::mat4 projection = glm::perspective(
+                glm::radians(fieldOfView), // Convert field of view to radians
+                aspectRatio, // Aspect ratio of the window
+                nearPlane, // Near clipping plane
+                farPlane // Far clipping plane
+            );            
 
             if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) camera.Rotate(-0.0001f, 0.0f);
             if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) camera.Rotate(0.0001f, 0.0f);
@@ -191,11 +154,10 @@ int main(void) {
             // Update view matrix
             glm::mat4 view = camera.GetViewMatrix();
 
-
             // Render your solar system
-            solarSystem.calculateForceVectorsBasedOnTimestep(1.0f, 30.0f);
+            solarSystem.calculateForceVectorsBasedOnTimestep(10.0f, 30.0f);
             solarSystem.calculateTotalForces();
-            solarSystem.updateCelestialBodyPositionsAndVelocities(1.0f);
+            solarSystem.updateCelestialBodyPositionsAndVelocities(10.0f);
             solarSystem.render(view, projection); // Pass the view and projection matrices to the render function
 
             glfwSwapBuffers(window);

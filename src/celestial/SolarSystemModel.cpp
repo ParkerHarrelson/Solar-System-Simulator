@@ -138,11 +138,11 @@ void SolarSystemModel::calculateTotalForces() {
         const auto& forceInfo = entry.second;
         const auto& forceVector = forceInfo.second;
 
-        netForces[bodyPair.first] -= forceVector;
-
-        netForces[bodyPair.second] += forceVector;
+        netForces[bodyPair.first] += forceVector;
+        netForces[bodyPair.second] -= forceVector;
     }
 }
+
 
 void SolarSystemModel::updateCelestialBodyPositionsAndVelocities(float timestep) {
     for (auto& body : celestialBodies) {

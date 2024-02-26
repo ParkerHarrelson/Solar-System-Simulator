@@ -16,7 +16,7 @@ Vector MathUtils::calculateGravitationalForceBetweenMasses(const SolarSystem::Ce
         throw std::runtime_error("Attempt to calculate gravitational force between overlapping celestial bodies.");
     }
 
-    double forceMagnitude = GRAVITATIONAL_CONSTANT * (bodyOne.getMass() * bodyTwo.getMass()) / (distance * distance);
+    double forceMagnitude = GRAVITATIONAL_CONSTANT_KM * (bodyOne.getMass() * bodyTwo.getMass()) / (distance * distance);
 
     Vector forceVector = direction.normalize() * forceMagnitude;
 
