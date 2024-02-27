@@ -11,6 +11,9 @@ namespace Utilities {
     constexpr double KILOMETERS_PER_ASTRONOMICAL_UNIT = 1.496e+8; // Distance from Earth to the Sun in kilometers
     constexpr double SECONDS_PER_DAY = 86400;
 
+    // Resource Locations
+    const std::string CELESTIAL_BODY_LOCATION = "../resources/Celestial Bodies/";
+
     // generic utils functions
     template<typename T>
     const T& clamp(const T& v, const T& lo, const T& hi) {

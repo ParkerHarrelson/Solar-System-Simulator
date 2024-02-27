@@ -1,0 +1,21 @@
+{
+  "celestialBodies": [
+    {
+      "type": "Planet",
+      "name": "Earth",
+      "mass": "5.972e24",
+      "position": {
+        "x": -1.496e8,
+        "y": 0,
+        "z": 0
+      },
+      "velocity": {
+        "x": 0,
+        "y": 29.7848,
+        "z": 0
+      },
+      "radius": 6371.07103,
+      "angularVelocity": 0
+    }
+  ]
+}

@@ -86,6 +86,7 @@ void SolarSystemModel::processForceCalculationForPair(
     if (score <= 0) {
         force = Utilities::MathUtils::calculateGravitationalForceBetweenMasses(*pair.first, *pair.second);
         score = determineNewScore(force, timestep);
+        std::printf("Calculating Force\n");
     }
     else {
         score -= adjustScoreBasedOnTimestep(score, timestep, fps); 

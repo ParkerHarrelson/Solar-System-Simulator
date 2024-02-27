@@ -79,14 +79,13 @@ int main(void) {
         SolarSystem::SolarSystemModel solarSystem;
         solarSystem.setShaderProgram(shaderProgram);
 
-        // Define the celestial bodies with small values for a simple simulation
         const float starRadius = 10.0f; // Star radius in km
         const float planetRadius = 5.0f; // Planet radius in km
         const float planetDistance = 600.0f; // Distance of the planet from the star in km
 
         // Star at the origin
         auto star = std::make_unique<SolarSystem::Star>(
-            1000000000000.0f, // Small mass for the star in kg
+            5.972e25, // Small mass for the star in kg
             Utilities::Vector(0.0f, 0.0f, 0.0f), // Stationary star
             starRadius, // Radius in km
             "Star",
@@ -97,8 +96,8 @@ int main(void) {
         );
 
         auto planet = std::make_unique<SolarSystem::Planet>(
-            500.0f, // Small mass for the planet in kg
-            Utilities::Vector(0.003334f, 0.0f, 0.0f), // Orbital velocity in km/s for a stable orbit
+            100000.0f, // Small mass for the planet in kg
+            Utilities::Vector(25773.74f, 0.0f, 40000.0f), // Orbital velocity in km/s for a stable orbit
             planetRadius, // Radius in km
             "Planet",
             Utilities::Vector(-600.0f, 0.0f, 0.0f), // Position near the star along the x-axis
@@ -131,7 +130,7 @@ int main(void) {
             glfwGetFramebufferSize(window, &width, &height); // Get the current window size
             float aspectRatio = static_cast<float>(width) / static_cast<float>(height);
 
-            glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // Dark blue background
+            glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // black background
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             // Setup the projection matrix
@@ -155,9 +154,9 @@ int main(void) {
             glm::mat4 view = camera.GetViewMatrix();
 
             // Render your solar system
-            solarSystem.calculateForceVectorsBasedOnTimestep(10.0f, 30.0f);
+            solarSystem.calculateForceVectorsBasedOnTimestep(0.0000001f, 30.0f);
             solarSystem.calculateTotalForces();
-            solarSystem.updateCelestialBodyPositionsAndVelocities(10.0f);
+            solarSystem.updateCelestialBodyPositionsAndVelocities(0.0000001f);
             solarSystem.render(view, projection); // Pass the view and projection matrices to the render function
 
             glfwSwapBuffers(window);

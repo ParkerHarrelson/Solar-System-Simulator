@@ -46,6 +46,9 @@
     <ClCompile Include="src\utils\GeometryManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\utils\CelestialBodyJSONLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\celestial\CelestialBody.h">
@@ -79,6 +82,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\utils\Camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\utils\CelestialBodyJSONLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

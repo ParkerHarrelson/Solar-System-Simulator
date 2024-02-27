@@ -1,0 +1,22 @@
+{
+  "stars": [
+    {
+      "type": "Star",
+      "name": "Sun",
+      "mass": "1.989e30",
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "velocity": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "radius": 696340,
+      "luminosity": 3.86e26,
+      "surfaceTemperature": 5778
+    }
+  ]
+}
