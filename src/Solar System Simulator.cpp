@@ -11,17 +11,18 @@
 #include <utils/Vector.h>
 #include <utils/ShaderUtils.h>
 #include <utils/GeometryManager.h>
+#include <utils/CelestialBodyJSONLoader.h>
 #include <utils/Camera.h>
 
 static void error_callback(int error, const char* description) {
     std::cerr << "Error: " << description << std::endl;
 }
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
+static void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
 }
 
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
+static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
     auto camera = static_cast<Utilities::Camera*>(glfwGetWindowUserPointer(window));
     camera->Zoom(static_cast<float>(yoffset) * -2.0e2f);
 }
@@ -79,88 +80,70 @@ int main(void) {
         SolarSystem::SolarSystemModel solarSystem;
         solarSystem.setShaderProgram(shaderProgram);
 
-        const float starRadius = 10.0f; // Star radius in km
-        const float planetRadius = 5.0f; // Planet radius in km
-        const float planetDistance = 600.0f; // Distance of the planet from the star in km
+        try {
 
-        // Star at the origin
-        auto star = std::make_unique<SolarSystem::Star>(
-            5.972e25, // Small mass for the star in kg
-            Utilities::Vector(0.0f, 0.0f, 0.0f), // Stationary star
-            starRadius, // Radius in km
-            "Star",
-            Utilities::Vector(0.0f, 0.0f, 0.0f), // Star's position at the origin
-            0.0f, // Angular velocity
-            1.0f, // Luminosity in arbitrary units
-            3000.0f // Surface temperature in Kelvin
-        );
+            auto celestialBodies = Utilities::CelestialBodyJSONLoader::LoadBodies(Utilities::CELESTIAL_BODY_LOCATION);
 
-        auto planet = std::make_unique<SolarSystem::Planet>(
-            100000.0f, // Small mass for the planet in kg
-            Utilities::Vector(25773.74f, 0.0f, 40000.0f), // Orbital velocity in km/s for a stable orbit
-            planetRadius, // Radius in km
-            "Planet",
-            Utilities::Vector(-600.0f, 0.0f, 0.0f), // Position near the star along the x-axis
-            0.0f // Angular velocity
-        );
+            for (auto& body : celestialBodies) {
+                solarSystem.addCelestialBody(std::move(body));
+            }
+
+            for (auto& body : solarSystem.getCelestialBodies()) {
+                body->initializeGraphics(geomManager);
+            }
+
+            Utilities::Camera camera(
+                1000.0f, // Position the camera 100 km from the origin, which is far enough to see both bodies
+                glm::radians(90.0f), // Theta, angle from the z-axis in radians, looking from a higher point
+                glm::radians(0.0f), // Phi, angle from the x-axis in the xy-plane in radians, looking directly at the origin
+                glm::vec3(0.0f, 0.0f, 0.0f) // focusPoint at the origin
+            );
 
 
-        solarSystem.addCelestialBody(std::move(star));
-        solarSystem.addCelestialBody(std::move(planet));
+            glfwSetWindowUserPointer(window, &camera);
 
+            glfwSetScrollCallback(window, scroll_callback);
 
-        for (auto& body : solarSystem.getCelestialBodies()) {
-            body->initializeGraphics(geomManager);
+            while (!glfwWindowShouldClose(window)) {
+                int width, height;
+                glfwGetFramebufferSize(window, &width, &height); // Get the current window size
+                float aspectRatio = static_cast<float>(width) / static_cast<float>(height);
+
+                glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // black background
+                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+                // Setup the projection matrix
+                float nearPlane = 1.0f; // 1 km from the camera
+                float farPlane = 10000.0f; // 100 km from the camera, enough to see both celestial bodies
+                float fieldOfView = 45.0f; // Field of view in degrees
+
+                glm::mat4 projection = glm::perspective(
+                    glm::radians(fieldOfView), // Convert field of view to radians
+                    aspectRatio, // Aspect ratio of the window
+                    nearPlane, // Near clipping plane
+                    farPlane // Far clipping plane
+                );
+
+                if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) camera.Rotate(-0.0001f, 0.0f);
+                if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) camera.Rotate(0.0001f, 0.0f);
+                if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) camera.Rotate(0.0f, -0.0001f);
+                if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) camera.Rotate(0.0f, 0.0001f);
+
+                // Update view matrix
+                glm::mat4 view = camera.GetViewMatrix();
+
+                // Render your solar system
+                solarSystem.calculateForceVectorsBasedOnTimestep(0.0000001f, 30.0f);
+                solarSystem.calculateTotalForces();
+                solarSystem.updateCelestialBodyPositionsAndVelocities(0.0000001f);
+                solarSystem.render(view, projection); // Pass the view and projection matrices to the render function
+
+                glfwSwapBuffers(window);
+                glfwPollEvents();
+            }
         }
-
-        Utilities::Camera camera(
-            1000.0f, // Position the camera 100 km from the origin, which is far enough to see both bodies
-            glm::radians(90.0f), // Theta, angle from the z-axis in radians, looking from a higher point
-            glm::radians(0.0f), // Phi, angle from the x-axis in the xy-plane in radians, looking directly at the origin
-            glm::vec3(0.0f, 0.0f, 0.0f) // focusPoint at the origin
-        );
-
-
-        glfwSetWindowUserPointer(window, &camera);
-
-        glfwSetScrollCallback(window, scroll_callback);
-
-        while (!glfwWindowShouldClose(window)) {
-            int width, height;
-            glfwGetFramebufferSize(window, &width, &height); // Get the current window size
-            float aspectRatio = static_cast<float>(width) / static_cast<float>(height);
-
-            glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // black background
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-            // Setup the projection matrix
-            float nearPlane = 1.0f; // 1 km from the camera
-            float farPlane = 10000.0f; // 100 km from the camera, enough to see both celestial bodies
-            float fieldOfView = 45.0f; // Field of view in degrees
-
-            glm::mat4 projection = glm::perspective(
-                glm::radians(fieldOfView), // Convert field of view to radians
-                aspectRatio, // Aspect ratio of the window
-                nearPlane, // Near clipping plane
-                farPlane // Far clipping plane
-            );            
-
-            if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) camera.Rotate(-0.0001f, 0.0f);
-            if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) camera.Rotate(0.0001f, 0.0f);
-            if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) camera.Rotate(0.0f, -0.0001f);
-            if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) camera.Rotate(0.0f, 0.0001f);
-
-            // Update view matrix
-            glm::mat4 view = camera.GetViewMatrix();
-
-            // Render your solar system
-            solarSystem.calculateForceVectorsBasedOnTimestep(0.0000001f, 30.0f);
-            solarSystem.calculateTotalForces();
-            solarSystem.updateCelestialBodyPositionsAndVelocities(0.0000001f);
-            solarSystem.render(view, projection); // Pass the view and projection matrices to the render function
-
-            glfwSwapBuffers(window);
-            glfwPollEvents();
+        catch (const std::exception& e) {
+            std::cerr << "Error loading celestial bodies: " << e.what() << std::endl;
         }
     }
 
